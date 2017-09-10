@@ -1,4 +1,6 @@
 require 'twitter'
+require 'dotenv'
+Dotenv.load
 
 class TweetUnfaver
 
@@ -6,16 +8,16 @@ class TweetUnfaver
 def unfaver(goal)
   
   client = Twitter::REST::Client.new do |config|
-    config.consumer_key        = "<<consumer key here>>"
-    config.consumer_secret     = "<<consumer secret here>>"
-    config.access_token        = "<<access token here>>"
-    config.access_token_secret = "<<access token secret here>>"
+    config.consumer_key        = ENV['CONSUMER_KEY']
+    config.consumer_secret     = ENV['CONSUMER_SECRET']
+    config.access_token        = ENV['ACCESS_TOKEN']
+    config.access_token_secret = ENV['ACCESS_TOKEN_SECRET']
   end
   
   count = client.user.favorites_count
   
   puts "-------------------"
-  puts "#{count} favorites remaining until #{goal}"
+  puts "#{count} faves remaining until #{goal}"
   puts "-------------------"
   
   if count > goal
@@ -51,4 +53,4 @@ end
 
 end
 
-TweetUnfaver.new.unfaver()
+TweetUnfaver.new.unfaver(5000)
