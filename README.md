@@ -18,21 +18,13 @@ I'm assuming you're (1) using a mac and (2) have ruby installed. If (1) is true
 
 1. Clone down this repo 
 2. `cd` into it with your command line client of choice
-3. Install the very good twitter gem:
-  `gem install twitter`
+3. Run `bundle install` to pull down a couple of necessary gems.
 4. Go to https://dev.twitter.com and create an application. 
 5. Get your keys and access tokens from the keys-and-access-tokens panel. You might
 need to generate the tokens.
-6. Go to the `unfaver.rb` file. In the bit that looks like this:
-```ruby
-config.consumer_key        = "<<consumer key here>>"
-config.consumer_secret     = "<<consumer secret here>>"
-config.access_token        = "<<access token here>>"
-config.access_token_secret = "<<access token secret here>>"
-```
-delete the `<< >>` portions and insert the relevant keys inside the quotes.
+6. Create (`touch .env` from the command line) a .env file and copy the variable names from `example.env` to the file. Then add your keys tokens and secrets to the file. 
 
-IMPORTANT: Do not commit the script containing these keys to github or anywhere else! 
+IMPORTANT: Do not commit the file containing these keys to github or anywhere else! 
 
 7. Wander on down to the very last line of the code. It will or should look like this:
 `TweetUnfaver.new.unfaver()`
