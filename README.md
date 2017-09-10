@@ -1,11 +1,15 @@
-# Unfaver
+# Tweet Scripts
 
-It unfaves your twitter faves and saves them to a .txt file! 
+A couple of scripts I use for cleaning up my twitter. USE AT YOUR OWN RISK. The deleter script works similarly to the unfaver only it blows up _EVERYTHING_!!!! !!! !!!!!!!!!!!
+
+The unfaver unfaves your twitter faves and saves them to a .txt file! 
 
 ATTENTION: This is a clumsy little hack of a script and may cause issues! It does
 not know anything about your rate limits and it handles errors by crashing. Every so often
 it will get itself stuck in a loop (usually when there's between 1-2 faves to delete remaining)
 and you'll need to interrupt it by hitting `control c`. 
+
+You will probably hit twitter's rate limit and get scary or weird errors. This is a Feature, Not A Bug™ and you shouldn't worry too much about it.
 
 As this is licensed under the coward's version of the "do what the fuck you want" license, not only
 can you do whatever you want with this you also can't blame me when it goes horribly wrong. 
