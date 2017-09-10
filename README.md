@@ -1,4 +1,4 @@
-# Tweet Scripts
+# twitterscripter
 
 A couple of scripts I use for cleaning up my twitter. USE AT YOUR OWN RISK. The deleter script works similarly to the unfaver only it blows up _EVERYTHING_!!!! !!! !!!!!!!!!!!
 
