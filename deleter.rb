@@ -11,9 +11,9 @@ class TweetDeleter
   end
   
   def get_tweets(client)
-    tweets = client.user_timeline
+    tweets = client.user_timeline(client.user, {count: 200, include_rts: true})
     raise AllTweetsDeleted, "All tweets deleted!" if tweets.empty?
-    @tweets = client.user_timeline
+    @tweets = tweets
   end
   
   def delete_tweets(client, goal)
@@ -43,7 +43,6 @@ class TweetDeleter
 
   def tweet_deleter(client, number_to_delete)
     tweets_to_delete, deletes_to_save = [], []
-    puts @tweets
     @tweets[0..number_to_delete - 1].each do |e|
       tweets_to_delete << e.id
       deletes_to_save << e.text
@@ -67,4 +66,4 @@ end
 
 deleter = TweetDeleter.new
 deleter.get_tweets(client)
-deleter.delete_tweets(client, "replace me with an integer")
+deleter.delete_tweets(client, 2)
