@@ -2,47 +2,69 @@ require 'twitter'
 require 'dotenv'
 Dotenv.load
 
+class AllTweetsDeleted < StandardError; end
+
 class TweetDeleter
 
-
-def deleter(goal)
-  
-  client = Twitter::REST::Client.new do |config|
-    config.consumer_key        = ENV['CONSUMER_KEY']
-    config.consumer_secret     = ENV['CONSUMER_SECRET']
-    config.access_token        = ENV['ACCESS_TOKEN']
-    config.access_token_secret = ENV['ACCESS_TOKEN_SECRET']
+  def initialize
+    @tweets = []
   end
   
-  def collect_with_max_id(collection=[], max_id=nil, &block)
-    response = yield(max_id)
-    collection += response
-    response.empty? ? collection.flatten : collect_with_max_id(collection, response.last.id - 1, &block)
+  def get_tweets(client)
+    tweets = client.user_timeline
+    raise AllTweetsDeleted, "All tweets deleted!" if tweets.empty?
+    @tweets = client.user_timeline
   end
-
-  def client.get_all_tweets(user)
-    collect_with_max_id do |max_id|
-      options = {count: 200, include_rts: true}
-      options[:max_id] = max_id unless max_id.nil?
-      user_timeline(user, options)
+  
+  def delete_tweets(client, goal)
+    raise ArgumentError, "Put a number in deleter() on line 57 - use 0 to delete EVERYTHING." if !goal.is_a?(Integer)
+    
+    count = client.user.tweets_count
+  
+    puts "-------------------"
+    puts "#{count} tweets remaining until #{goal}"
+    puts "-------------------"
+  
+    if count > goal
+      if count - goal < 100
+        number_to_delete = count - goal
+      else
+        number_to_delete = 100
+      end
+      tweet_deleter(client, number_to_delete)
+      delete_tweets(client, goal)
+    else
+      puts "#{goal} tweets deleted"
     end
+    
+  rescue Twitter::Error::TooManyRequests
+    puts "You have exceeded Twitter's rate limit, please relax and try again in 24 hours."
   end
 
-  tweets = client.get_all_tweets("additionaltext")
-  File.open("deleted_tweets.txt", "a") do |f|
-    tweets.each do |tweet|
-    f.puts(tweet.text)
+  def tweet_deleter(client, number_to_delete)
+    tweets_to_delete, deletes_to_save = [], []
+    puts @tweets
+    @tweets[0..number_to_delete - 1].each do |e|
+      tweets_to_delete << e.id
+      deletes_to_save << e.text
     end
+    
+    File.open("deleted_tweets.txt", "a") do |f|
+      f.puts(deletes_to_save)
+    end
+
+    client.destroy_status(tweets_to_delete)
   end
-  number_of_tweets = tweets.count
-  puts tweets.count
-  client.destroy_status(tweets)
-  client.update!("Eradication Of #{number_of_tweets} Past Tweets Complete at #{Time.now}.")
-
-
 
 end
 
+client = Twitter::REST::Client.new do |config|
+  config.consumer_key        = ENV['CONSUMER_KEY']
+  config.consumer_secret     = ENV['CONSUMER_SECRET']
+  config.access_token        = ENV['ACCESS_TOKEN']
+  config.access_token_secret = ENV['ACCESS_TOKEN_SECRET']
 end
 
-TweetDeleter.new.deleter(2300)
+deleter = TweetDeleter.new
+deleter.get_tweets(client)
+deleter.delete_tweets(client, "replace me with an integer")
