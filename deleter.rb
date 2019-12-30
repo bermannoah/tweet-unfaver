@@ -39,6 +39,9 @@ class TweetDeleter
 
   rescue Twitter::Error::TooManyRequests
     puts "You have exceeded Twitter's rate limit, please relax and try again in 24 hours."
+  rescue Twitter::Error::NotFound
+    # tweet_deleter(client, 99)
+    return
   end
 
   def tweet_deleter(client, number_to_delete)
@@ -68,4 +71,4 @@ end
 
 deleter = TweetDeleter.new
 deleter.get_tweets(client)
-deleter.delete_tweets(client, 2 )
+deleter.delete_tweets(client, 0)
